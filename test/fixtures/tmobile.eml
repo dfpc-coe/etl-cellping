@@ -1,0 +1,14 @@
+From: Carrier Locations <locations@carrier.example.com>
+To: Layer <aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa@mail.map.example.com>
+Subject: Location of 7207575443
+Date: Sat, 15 Aug 2026 09:34:02 +0000
+Message-ID: <ping-1@carrier.example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Location of 7207575443 at 8/15/2026 2:33:07 AM Pacific Daylight Time
+
+=== Result ===
+Lat, Long: 38.065071,-102.847889
+Uncertainty: 735m
+https://maps.google.com/maps?q=38.095071,-102.537889

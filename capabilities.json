@@ -1,0 +1,26 @@
+{
+    "version": "1.0",
+    "name": "Cell Ping",
+    "description": "Receives the cell phone location emails that carriers send in response to an exigent location request and posts the location & its uncertainty to the map as Cursor-on-Target.",
+    "compute": {
+        "memory": 256,
+        "timeout": 30
+    },
+    "permissions": [
+        {
+            "resource": "feature:*",
+            "required": true,
+            "description": "Cell Ping posts phone locations to the map"
+        }
+    ],
+    "invocations": {
+        "incoming": {
+            "email": {
+                "description": "Carrier location emails sent or forwarded to the Layer are parsed into a phone location.",
+                "default": {
+                    "enabled": true
+                }
+            }
+        }
+    }
+}
