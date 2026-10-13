@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.1.0
+
+- :arrow_up: Update Core Dependencies
+
 ### Pending Release
 
 - :tada: Receive carrier location emails via the `Email` invocation of `@tak-ps/etl@10.22` & submit each location as a point with a circle of its uncertainty
