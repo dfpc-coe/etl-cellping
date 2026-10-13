@@ -2,7 +2,7 @@
     "name": "etl-cellping",
     "type": "module",
     "private": true,
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Cell phone location pings received by email for CloudTAK",
     "main": "task.ts",
     "scripts": {
