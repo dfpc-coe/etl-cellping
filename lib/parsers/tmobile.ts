@@ -38,7 +38,7 @@ const tmobile: PingParser = {
             const ping: Ping = {
                 parser: tmobile.name,
                 carrier: tmobile.carrier,
-                phone: phone.replace(/\D/g, ''),
+                phone: phone.replaceAll(/\D/g, ''),
                 located: [date, time, meridiem, zone].filter(Boolean).join(' '),
                 lat: Number(lat),
                 lon: Number(lon)

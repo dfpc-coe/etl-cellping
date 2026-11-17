@@ -43,7 +43,7 @@ const ZONES: Record<string, number> = {
  * @returns null if the zone isn't known
  */
 export function parseOffset(zone: string): number | null {
-    const name = zone.trim().replace(/\s+/g, ' ').toLowerCase();
+    const name = zone.trim().replaceAll(/\s+/g, ' ').toLowerCase();
 
     if (name in ZONES) return ZONES[name];
 

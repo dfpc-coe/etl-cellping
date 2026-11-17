@@ -88,11 +88,11 @@ test('pingFeatures: point & uncertainty', () => {
     assert.ok(circle.geometry.type === 'Polygon');
     const ring = circle.geometry.coordinates[0];
     assert.equal(ring.length, 65);
-    assert.deepEqual(ring[0], ring[ring.length - 1]);
+    assert.deepEqual(ring[0], ring.at(-1));
 
     for (const position of ring) {
         const meters = distance([PING.lon, PING.lat], position);
-        assert.ok(Math.abs(meters - 735) < 1, `${position} is ${meters}m from the location`);
+        assert.ok(Math.abs(meters - 735) < 1, `${position.join(',')} is ${meters}m from the location`);
     }
 });
 
@@ -107,8 +107,8 @@ test('pingFeatures: uncertainty disabled or not reported', () => {
         'Phone: 7207575443',
         'Located: 8/15/2026 2:33:07 AM Pacific Daylight Time'
     ].join('\n'));
-    assert.equal('uncertainty' in (features[0].properties.metadata || {}), false);
-    assert.equal('url' in (features[0].properties.metadata || {}), false);
+    assert.equal('uncertainty' in (features[0].properties.metadata ?? {}), false);
+    assert.equal('url' in (features[0].properties.metadata ?? {}), false);
 });
 
 test('pingFeatures: fallback time', () => {
@@ -135,14 +135,19 @@ test('pingFeatures: converts to Cursor on Target', async () => {
 
     const cot = await CoTParser.from_geojson(point);
 
-    assert.equal(cot.raw.event._attributes.uid, 'cellping-7207575443-1786786387');
-    assert.equal(cot.raw.event._attributes.type, 'a-u-G');
-    assert.equal(cot.raw.event._attributes.time, '2026-08-15T09:33:07.000Z');
-    assert.equal(cot.raw.event._attributes.start, '2026-08-15T09:33:07.000Z');
-    assert.equal(Number(cot.raw.event.point._attributes.lat), 38.065071);
-    assert.equal(Number(cot.raw.event.point._attributes.lon), -102.847889);
-    assert.equal(cot.raw.event.detail?.contact?._attributes.callsign, '7207575443 09:33Z');
-    assert.match(String(cot.raw.event.detail?.remarks?._text), /Uncertainty: 735m/);
+    assert.partialDeepStrictEqual(cot.raw.event, {
+        _attributes: {
+            uid: 'cellping-7207575443-1786786387',
+            type: 'a-u-G',
+            time: '2026-08-15T09:33:07.000Z',
+            start: '2026-08-15T09:33:07.000Z'
+        },
+        point: { _attributes: { lat: 38.065071, lon: -102.847889 } },
+        detail: { contact: { _attributes: { callsign: '7207575443 09:33Z' } } }
+    });
+
+    const { _text: remarks } = cot.raw.event.detail?.remarks ?? {};
+    assert.match(String(remarks), /Uncertainty: 735m/);
 
     const xml = CoTParser.to_xml(cot);
     assert.match(xml, /^<event /);
@@ -150,9 +155,14 @@ test('pingFeatures: converts to Cursor on Target', async () => {
 
     const shape = await CoTParser.from_geojson(circle);
 
-    assert.equal(shape.raw.event._attributes.uid, 'cellping-7207575443-1786786387-uncertainty');
-    assert.equal(shape.raw.event._attributes.type, 'u-d-c-c');
-    assert.equal(Number(shape.raw.event.point._attributes.lat), 38.065071);
-    assert.equal(Number(shape.raw.event.point._attributes.lon), -102.847889);
-    assert.deepEqual(shape.raw.event.detail?.shape?.ellipse?._attributes, { major: 735, minor: 735, angle: 360 });
+    assert.partialDeepStrictEqual(shape.raw.event, {
+        _attributes: {
+            uid: 'cellping-7207575443-1786786387-uncertainty',
+            type: 'u-d-c-c'
+        },
+        point: { _attributes: { lat: 38.065071, lon: -102.847889 } }
+    });
+
+    const { _attributes: ellipse } = shape.raw.event.detail?.shape?.ellipse ?? {};
+    assert.deepEqual(ellipse, { major: 735, minor: 735, angle: 360 });
 });

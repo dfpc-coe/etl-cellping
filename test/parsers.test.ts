@@ -107,7 +107,7 @@ test('tmobile: formatted phone numbers', () => {
         const pings = parsePings(TMOBILE.replace('7207575443', phone));
 
         assert.equal(pings.length, 1, phone);
-        assert.equal(pings[0].phone, phone.replace(/\D/g, ''));
+        assert.equal(pings[0].phone, phone.replaceAll(/\D/g, ''));
     }
 });
 

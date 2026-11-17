@@ -16,23 +16,23 @@ export const PARSER_NAMES = PARSERS.map((p) => p.name);
  */
 export function normalize(text: string): string {
     return text
-        .replace(/^[ \t]*(?:>[ \t]*)+/gm, '')
-        .replace(/[\u00A0\u2007\u202F]/g, ' ')
-        .replace(/[\u200B-\u200D\uFEFF]/g, '')
-        .replace(/\s+/g, ' ')
+        .replaceAll(/^[ \t]*(?:>[ \t]*)+/gm, '')
+        .replaceAll(/[\u00A0\u2007\u202F]/g, ' ')
+        .replaceAll(/[\u200B-\u200D\uFEFF]/g, '')
+        .replaceAll(/\s+/g, ' ')
         .trim();
 }
 
 /** Plain text of an HTML only email */
 export function htmlToText(html: string): string {
     return html
-        .replace(/<(style|script)\b[\s\S]*?<\/\1>/gi, ' ')
-        .replace(/<[^>]+>/g, ' ')
-        .replace(/&nbsp;/gi, ' ')
-        .replace(/&amp;/gi, '&')
-        .replace(/&lt;/gi, '<')
-        .replace(/&gt;/gi, '>')
-        .replace(/&#(\d+);/g, (entity, code) => String.fromCodePoint(Number(code)));
+        .replaceAll(/<(style|script)\b[\s\S]*?<\/\1>/gi, ' ')
+        .replaceAll(/<[^>]+>/g, ' ')
+        .replaceAll(/&nbsp;/gi, ' ')
+        .replaceAll(/&amp;/gi, '&')
+        .replaceAll(/&lt;/gi, '<')
+        .replaceAll(/&gt;/gi, '>')
+        .replaceAll(/&#(\d+);/g, (entity, code) => String.fromCodePoint(Number(code)));
 }
 
 /**
@@ -58,7 +58,7 @@ export function parsePings(text: string): Ping[] {
             pings.push(ping);
         }
 
-        if (pings.length) break;
+        if (pings.length > 0) break;
     }
 
     return pings;

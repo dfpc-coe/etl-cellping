@@ -97,7 +97,7 @@ export function pingFeatures(ping: Ping, opts: FeatureOptions): InputFeature[] {
         }
     }];
 
-    if (opts.uncertainty && ping.uncertainty) {
+    if (opts.uncertainty && ping.uncertainty !== undefined && ping.uncertainty !== 0) {
         features.push({
             id: `${id}-uncertainty`,
             type: 'Feature',

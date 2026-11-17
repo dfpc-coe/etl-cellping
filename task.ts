@@ -42,24 +42,18 @@ export default class Task extends ETL {
         type: SchemaType = SchemaType.Input,
         flow: DataFlowType = DataFlowType.Incoming
     ): Promise<TSchema> {
-        if (flow === DataFlowType.Incoming) {
-            if (type === SchemaType.Input) {
-                return InputSchema;
-            } else {
-                return OutputSchema;
-            }
-        } else {
-            return Type.Object({});
-        }
+        if (flow !== DataFlowType.Incoming) return Type.Object({});
+
+        return type === SchemaType.Input ? InputSchema : OutputSchema;
     }
 
     async email(message: EmailMessage): Promise<void> {
         const env = await this.env(InputSchema);
 
         let pings = parsePings(message.text || '');
-        if (!pings.length && message.html) pings = parsePings(htmlToText(message.html));
+        if (pings.length === 0 && message.html) pings = parsePings(htmlToText(message.html));
 
-        if (!pings.length) {
+        if (pings.length === 0) {
             console.error(`not ok - email ${message.id} does not contain a known location format`);
             return;
         }
@@ -103,6 +97,6 @@ export default class Task extends ETL {
 }
 
 await local(await Task.init(import.meta.url), import.meta.url);
-export async function handler(event: Event = {}) {
-    return await internal(new Task(import.meta.url), event);
+export async function handler(event: Event = {}): ReturnType<typeof internal> {
+    return internal(new Task(import.meta.url), event);
 }

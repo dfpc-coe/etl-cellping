@@ -159,7 +159,7 @@ test('handler: email event is parsed & submitted', async () => {
 
     mock.method(Email, 'fetch', async (event: unknown) => {
         events.push(event);
-        return await Email.parse(TMOBILE, 'message-id');
+        return Email.parse(TMOBILE, 'message-id');
     });
 
     try {
@@ -205,6 +205,6 @@ test('capabilities: email is the only invocation', async () => {
 
     const doc = StaticCapabilities.validate(JSON.parse(String(fs.readFileSync(new URL('../capabilities.json', import.meta.url)))));
 
-    assert.deepEqual(Object.keys(doc.invocations.incoming || {}), ['email']);
+    assert.deepEqual(Object.keys(doc.invocations.incoming ?? {}), ['email']);
     assert.equal(doc.invocations.incoming?.email?.default.enabled, true);
 });
